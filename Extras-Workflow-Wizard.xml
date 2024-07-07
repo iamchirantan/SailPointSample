@@ -1,0 +1,159 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+
+<sailpoint>
+
+<Workflow name='Wizard'
+  handler='sailpoint.api.StandardWorkflowHandler'>
+
+  <Variable name='trace' initializer='true'/>
+
+  <Variable name='fullname'/>
+  <Variable name='shoeSize'/>
+  <Variable name='sex'/>
+  <Variable name='request'/>
+  <Variable name='when'/>
+
+  <Step name='Who'>
+    <Approval name='Workflow Wizard'
+      owner='spadmin' send='fullname,shoeSize,sex' return='fullname,shoeSize,sex'>
+      <Form id='foo'>
+        <Attributes>
+          <Map>
+            <entry key='pageTitle' value='A Form Is Born'/>
+            <entry key='title' value='A Form Label'/>
+          </Map>
+        </Attributes>
+        <Section label='A Section Label!'>
+          <Field name='fullname' displayName='Full name' type='string'/>
+          <Field name='shoeSize' displayName='Shoe size' type='string'/>
+          <Field name='sex' displayName='Sex' type='boolean'/>
+        </Section>
+        <Button label='Cancel' action='cancel'/>
+        <Button label='Next' action='next'/>
+      </Form>
+    </Approval>
+    <Transition to='What' when='approved'/>
+    <Transition to='end'/>
+  </Step>
+
+  <Step name='What'>
+    <Approval owner='ref:sessionOwner' send='request' return='request'>
+      <Form id='foo'>
+        <Attributes>
+          <Map>
+            <entry key='pageTitle' value='A Form Is Born'/>
+            <entry key='title' value='Why are you here?'/>
+          </Map>
+        </Attributes>
+        <Section>
+          <Field name='request' 
+                 displayName='Enter your desires'
+                 type='string'/>
+        </Section>
+        <Button label='Back' action='back'/>
+        <Button label='Next' action='next'/>
+      </Form>
+    </Approval>
+    <Transition to='When' when='approved'/>
+    <Transition to='Who'/>
+  </Step>
+
+  <Step name='When'>
+    <Approval owner='ref:sessionOwner' send='when' return='when'>
+      <Form id='foo'>
+        <Attributes>
+          <Map>
+            <entry key='pageTitle' value='A Form Is Born'/>
+            <entry key='title' value='When do you want it?'/>
+          </Map>
+        </Attributes>
+        <Section>
+          <Field name='when' 
+                 displayName='Enter desired date'
+                 type='date'/>
+        </Section>
+        <Button label='Back' action='back'/>
+        <Button label='Next' action='next'/>
+      </Form>
+    </Approval>
+    <Transition to='Giftwrap' when='approved'/>
+    <Transition to='What'/>
+  </Step>
+
+  <Step name='Giftwrap'>
+    <Approval owner='ref:sessionOwner' send='giftwrap' return='giftwrap'>
+      <Form id='foo'>
+        <Attributes>
+          <Map>
+            <entry key='pageTitle' value='A Form Is Born'/>
+            <entry key='title' value='Giftwrap?'/>
+          </Map>
+        </Attributes>
+        <Section>
+          <Field name='giftwrap' displayName='Select giftwrap' type='string'>
+            <AllowedValues>
+              <String>Plain Offwhite</String>
+              <String>Masculine Stripes</String>
+              <String>Clowns and Balloons</String>
+              <String>Roses and Hearts</String>
+              <String>Champagne and Cake</String>
+              <String>Skulls and Entrails</String>
+            </AllowedValues>
+          </Field>
+        </Section>
+        <Button label='Back' action='back'/>
+        <Button label='Next' action='next'/>
+      </Form>
+    </Approval>
+    <Transition to='Review' when='approved'/>
+    <Transition to='When'/>
+  </Step>
+
+  <Step name='Review'>
+    <Approval owner='ref:sessionOwner' send='fullname,request,when,giftwrap'>
+      <Form id='foo'>
+        <Attributes>
+          <Map>
+            <entry key='pageTitle' value='A Form Is Born'/>
+            <entry key='title' value='Review Your Order'/>
+          </Map>
+        </Attributes>
+        <Section>
+          <!-- 
+               TODO: need to think about how results are rendered,
+               maybe a new FormItem that isn't a field?
+          <Field name='result'
+                 currentValue='Thank you $(fullname), your request has been noted'
+                 readOnly='true'/>
+          -->
+          <Field name='fullname' displayName='You are' type='string'/>
+          <Field name='request' displayName='You asked for' type='string'/>
+          <Field name='when' displayName='To be delivered on' type='string'/>
+          <Field name='giftwrap' displayName='Giftwrapped in' type='string'/>
+        </Section>
+        <Button label='Ok' action='next'/>
+        <Button label='Start Over' action='cancel'/>
+      </Form>
+    </Approval>
+    <Transition to='end' when='approved'/>
+    <Transition to='Start Over'/>
+  </Step>
+
+  <Step name='Start Over'>
+    <Script><Source>
+      // initialize variables, should be an easier way to do this
+      workflow.put("fullname", null);
+      workflow.put("shoeSize", null);
+      workflow.put("sex", null);
+      workflow.put("request", null);
+      workflow.put("when", null);
+    </Source></Script>
+    <Transition to='Who'/>
+  </Step>
+
+  <Step name='end'/>
+
+</Workflow>
+
+</sailpoint>

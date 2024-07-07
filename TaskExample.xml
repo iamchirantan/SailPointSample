@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE TaskDefinition PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<TaskDefinition executor="sailpoint.custom.training.TaskExample" name="Task Example" type="Generic" template="true">
+  <Description>
+      Select an application below. Task will take the Application name and return the owner of the Application. If you select an Identity, it will iterate through the common names for. 
+    </Description>
+  <Signature>
+    <Inputs>
+      <Argument name="application" required="true" type="Application">
+        <Prompt>Search Application (i.e., find owner of the application)</Prompt>
+      </Argument>
+      <Argument multi="true" name="identities" required="true" type="Identity">
+        <Prompt>Select Identities:</Prompt>
+      </Argument>
+      <Argument name="showApplicationDetails" type="boolean">
+        <Prompt>Check to show other properties of the application:</Prompt>
+      </Argument>
+    </Inputs>
+    <Returns>
+      <Argument name="owner" type="String">
+        <Prompt>Owner:</Prompt>
+      </Argument>
+      <Argument name="additional_info" type="String">
+        <Prompt>Additional Application Info:</Prompt>
+      </Argument>      
+      <Argument name="identities" type="String">
+        <Prompt>Identities:</Prompt>
+      </Argument>      
+    </Returns>
+  </Signature>
+</TaskDefinition>

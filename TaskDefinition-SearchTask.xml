@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<TaskDefinition executor="sailpoint.custom.training.SearchTask"  name="Search Task" progressInterval="5000" progressMode="String" resultAction="Rename" template="true" type="Generic">
+<Description>
+Runs a search for a term against a specific type of object. 
+</Description>
+<Signature>
+<Inputs>
+<Argument name="search_term" type="string">
+<Prompt>Search Term:</Prompt>
+</Argument>
+<Argument name="object_type" type="string">
+<Prompt>Object type to search (example sailpoint.object.Identity)</Prompt>
+</Argument>
+</Inputs>
+<Returns>
+<Argument name="success" type="boolean">
+<Prompt>Success: </Prompt>
+</Argument>
+<Argument name="messages" type="string">
+<Prompt>Messages: </Prompt>
+</Argument>
+<Argument name="count" type="integer">
+<Prompt>Count: </Prompt>
+</Argument>
+<Argument name="match_count" type="integer">
+<Prompt>Match Count: </Prompt>
+</Argument>
+<Argument name="items" type="string">
+<Prompt>Objects matching search term: </Prompt>
+</Argument>
+</Returns>
+</Signature>
+</TaskDefinition>
+</sailpoint>
+

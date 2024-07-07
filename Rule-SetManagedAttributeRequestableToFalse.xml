@@ -1,0 +1,41 @@
+
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="Management Entitlements - Make them no" type="ManagedAttributeCustomization">
+  <Description>A ManagedAttributeCustomization rule is called when ManagedAttributes are automatically created during aggregation, refresh, or from the missing entitlement descriptions task.
+
+This can modify the ManagedAttribute that is passed in to set fields such as owner, requestable, or explanations before they are saved.</Description>
+  <Signature>
+    <Inputs>
+      <Argument name="log">
+        <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+      </Argument>
+      <Argument name="context">
+        <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+      </Argument>
+      <Argument name="attribute">
+        <Description>
+          The sailpoint.object.ManagedAttribute to customize.
+        </Description>
+      </Argument>
+      <Argument name="application">
+        <Description>
+          The sailpoint.object.Application the managed attribute is from.
+        </Description>
+      </Argument>
+      <Argument name="state" type="Map">
+        <Description>
+          A Map that contains managed attribute customization shared state during a task run.
+        </Description>
+      </Argument>
+    </Inputs>
+  </Signature>
+  <Source>attribute.setRequestable(false);
+System.out.println("Running ME Rule");</Source>
+</Rule>
+
+

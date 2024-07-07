@@ -1,0 +1,56 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="AllowedValues-Location-UsingCustom" type="AllowedValues">
+  <Description>This Allowed Values Rule uses a Custom configuration object that is loaded into IdentityIQ. The Custom object is called "Location"</Description>
+  <Signature returnType="Object">
+    <Inputs>
+      <Argument name="log">
+        <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+      </Argument>
+      <Argument name="context">
+        <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+      </Argument>
+      <Argument name="identity">
+        <Description>
+          The Identity object being provisioned.
+        </Description>
+      </Argument>
+      <Argument name="form">
+        <Description>
+          The Form object for the provisioning plan.
+        </Description>
+      </Argument>
+      <Argument name="field">
+        <Description>
+          The Field object being analyzed.
+        </Description>
+      </Argument>
+    </Inputs>
+    <Returns>
+      <Argument name="value">
+        <Description>
+          An Obect (possibly a Collection) of the allowed values for the given
+          field.
+        </Description>
+      </Argument>
+    </Returns>
+  </Signature>
+  <Source>
+      import sailpoint.object.*;
+import java.util.*;
+
+     Object list = context.getObjectByName(Custom.class, "AllowedValues-Location");
+          if (null == list) {
+              return new ArrayList();
+          } else {
+              return list.get("Location");
+          }
+
+ 
+
+</Source>
+</Rule>

@@ -1,0 +1,161 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<CorrelationConfig name="FPR Correlation">
+  <AttributeAssignments>
+    <Filter operation="EQ" property="empId" value="empId"/>
+  </AttributeAssignments>
+</CorrelationConfig>
+<Rule  language="beanshell"  name="File Parsing Rule" type="FileParsingRule">
+  <Description>
+  This rule is used by the connector to parse each object from non-delimited file formats.
+  </Description>
+  <Signature returnType="Map">
+    <Inputs>
+      <Argument name="application">
+        <Description>
+          The application associated with the Connector calling the rule.
+        </Description>
+      </Argument>
+      <Argument name="config">
+        <Description>
+          The Attributes map from the Application.
+        </Description>
+      </Argument>
+      <Argument name="schema">
+        <Description>
+          The Schema from the application.
+        </Description>
+      </Argument>
+      <Argument name="inputStream">
+        <Description>
+          An InputStream object to the data file.
+        </Description>
+      </Argument>
+      <Argument name="reader">
+        <Description>
+          A Reader to wrap the InputStream.
+        </Description>
+      </Argument>
+      <Argument name="state">
+        <Description>
+          A map object that can be used to store data during the iteration process.
+        </Description>
+      </Argument>
+    </Inputs>
+    <Returns>
+      <Argument name="map">
+        <Description>
+          A Map of the complete record.
+        </Description>
+      </Argument>
+    </Returns>
+  </Signature>
+  <Source>
+    
+ // Simple parseRule to use reader to read next line
+
+import sailpoint.tools.xml.*; 
+import sailpoint.connector.DelimitedFileConnector; 
+import java.util.Array;
+import java.util.List; 
+
+
+map = null;
+List cols = null;
+//Grab state if it exists... if it does, we already have the header and we can process rows, otherwise read the header row
+cols  = (List)state.get("cols");
+        
+if ( cols == null ) 
+        {
+                                //Need to grab header row
+                                String nextline = reader.readLine();
+                //
+                cols = Arrays.asList(nextline.split(","));
+
+                //
+                // Save columns off for future iterations 
+                //
+                state.put("cols", cols); 
+        } 
+                
+        String nextLine = reader.readLine();
+        if ( nextLine != null ) 
+        {       
+            List tokens = Arrays.asList(nextLine.split(","));
+            map = DelimitedFileConnector.defaultBuildMap(cols, tokens);
+            System.out.println("object:"+XMLObjectFactory.getInstance().toXml(map));                        
+        }
+ 
+        return map;
+    
+  </Source>
+</Rule>
+<Application connector="sailpoint.connector.RuleFileConnector"  featuresString="DIRECT_PERMISSIONS, NO_RANDOM_ACCESS, DISCOVER_SCHEMA"  name="FPR Application" profileClass="" type="RuleBasedFileParser">
+  <AccountCorrelationConfig>
+    <Reference class="sailpoint.object.CorrelationConfig"  name="FPR Correlation"/>
+  </AccountCorrelationConfig>
+  <Attributes>
+    <Map>
+      <entry key="acctAggregationEnd">
+        <value>
+          <Date>1329216973514</Date>
+        </value>
+      </entry>
+      <entry key="acctAggregationStart">
+        <value>
+          <Date>1329216973280</Date>
+        </value>
+      </entry>
+      <entry key="compositeDefinition"/>
+      <entry key="file" value="c:\ImplementerTraining\data\FileParsingRule.csv"/>
+      <entry key="filetransport" value="local"/>
+      <entry key="filterEmptyRecords">
+        <value>
+          <Boolean>true</Boolean>
+        </value>
+      </entry>
+      <entry key="parseRule" value="File Parsing Rule"/>
+      <entry key="templateApplication" value="RuleBasedFileParser Template"/>
+    </Map>
+  </Attributes>
+  <Description></Description>
+  <Owner>
+    <Reference class="sailpoint.object.Identity" name="spadmin"/>
+  </Owner>
+  <Schemas>
+    <Schema created="1329216891314" displayAttribute="userId"  identityAttribute="userId" instanceAttribute="" nativeObjectType="account" objectType="account" permissionsRemediationModificationType="None">
+      <AttributeDefinition name="description" remediationModificationType="None" type="string">
+        <Description></Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="empId" remediationModificationType="None" type="string">
+        <Description></Description>
+      </AttributeDefinition>
+      <AttributeDefinition multi="true" name="entitlement" remediationModificationType="None" type="string">
+        <Description></Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="userId" remediationModificationType="None" type="string">
+        <Description></Description>
+      </AttributeDefinition>
+    </Schema>
+  </Schemas>
+</Application>
+<TaskDefinition  formPath="/monitor/tasks/accountAggregationTask.xhtml"   name="Aggregate FPR" resultAction="Delete" type="AccountAggregation">
+  <Attributes>
+    <Map>
+      <entry key="applications" value="FPR Application"/>
+      <entry key="checkDeleted" value="true"/>
+    </Map>
+  </Attributes>
+  <Description>Task template for application account scanning.</Description>
+  <Owner>
+    <Reference class="sailpoint.object.Identity"  name="spadmin"/>
+  </Owner>
+  <Parent>
+    <Reference class="sailpoint.object.TaskDefinition"  name="Account Aggregation"/>
+  </Parent>
+  <SignoffConfig>
+    <WorkItemConfig  disabled="true" escalationStyle="none" />
+  </SignoffConfig>
+</TaskDefinition>
+</sailpoint>

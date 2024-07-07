@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/!svn/ver/45211/services/training/identityiq/ImplementerTraining/trunk/config/Extras
+END
+Workflow-LCM-Example-Form-Email.xml
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/svn/!svn/ver/45211/services/training/identityiq/ImplementerTraining/trunk/config/Extras/Workflow-LCM-Example-Form-Email.xml
+END
+EmailTemplate-LCM-Training-Approved.xml
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/!svn/ver/45211/services/training/identityiq/ImplementerTraining/trunk/config/Extras/EmailTemplate-LCM-Training-Approved.xml
+END
+FileParsingRuleCorrelationConfig.xml
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/svn/!svn/ver/45211/services/training/identityiq/ImplementerTraining/trunk/config/Extras/FileParsingRuleCorrelationConfig.xml
+END
+Rule-Example-ManagedAttributeWalker.xml
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/!svn/ver/45211/services/training/identityiq/ImplementerTraining/trunk/config/Extras/Rule-Example-ManagedAttributeWalker.xml
+END
+FileParsingRule.csv
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/!svn/ver/45211/services/training/identityiq/ImplementerTraining/trunk/config/Extras/FileParsingRule.csv
+END
+EmailTemplate-LCM-Training-Rejected.xml
+K 25
+svn:wc:ra_dav:version-url
+V 128
+/svn/!svn/ver/45211/services/training/identityiq/ImplementerTraining/trunk/config/Extras/EmailTemplate-LCM-Training-Rejected.xml
+END
+ExclusionRule-Example.xml
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/!svn/ver/45211/services/training/identityiq/ImplementerTraining/trunk/config/Extras/ExclusionRule-Example.xml
+END
+FileParsingRule.xml
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/!svn/ver/45211/services/training/identityiq/ImplementerTraining/trunk/config/Extras/FileParsingRule.xml
+END
+FileParsingRuleApp.xml
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/!svn/ver/45211/services/training/identityiq/ImplementerTraining/trunk/config/Extras/FileParsingRuleApp.xml
+END
+FileParsingRuleTask.xml
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/!svn/ver/45211/services/training/identityiq/ImplementerTraining/trunk/config/Extras/FileParsingRuleTask.xml
+END

@@ -1,0 +1,91 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule created="1329216522175" id="2c901c1e357b712701357b7a87bf000e" language="beanshell" modified="1329217617944" name="File Parsing Rule" type="FileParsingRule">
+  <Description>
+  This rule is used by the connector to parse each object from non-delimited file formats.
+  </Description>
+  <Signature returnType="Map">
+    <Inputs>
+      <Argument name="application">
+        <Description>
+          The application associated with the Connector calling the rule.
+        </Description>
+      </Argument>
+      <Argument name="config">
+        <Description>
+          The Attributes map from the Application.
+        </Description>
+      </Argument>
+      <Argument name="schema">
+        <Description>
+          The Schema from the application.
+        </Description>
+      </Argument>
+      <Argument name="inputStream">
+        <Description>
+          An InputStream object to the data file.
+        </Description>
+      </Argument>
+      <Argument name="reader">
+        <Description>
+          A Reader to wrap the InputStream.
+        </Description>
+      </Argument>
+      <Argument name="state">
+        <Description>
+          A map object that can be used to store data during the iteration process.
+        </Description>
+      </Argument>
+    </Inputs>
+    <Returns>
+      <Argument name="map">
+        <Description>
+          A Map of the complete record.
+        </Description>
+      </Argument>
+    </Returns>
+  </Signature>
+  <Source>
+    
+ // Simple parseRule to use reader to read next line
+
+// import sailpoint.tools.*; 
+// import sailpoint.tools.xml.*; 
+// import sailpoint.object.Schema; 
+// import sailpoint.connector.Connector; 
+//import sailpoint.connector.DelimitedFileConnector; 
+// import java.util.ArrayList; 
+//import java.util.Array;
+//import java.util.List; 
+//import java.util.HashMap;
+
+map = null;
+List cols = null;
+//Grab state if it exists... if it does, we already have the header and we can process rows, otherwise read the header row
+cols  = (List)state.get("cols");
+        
+if ( cols == null ) 
+        {
+                                //Need to grab header row
+                                String nextline = reader.readLine();
+                //
+                cols = Arrays.asList(nextline.split(","));
+
+                //
+                // Save columns off for future iterations 
+                //
+                state.put("cols", cols); 
+        } 
+                
+        String nextLine = reader.readLine();
+        if ( nextLine != null ) 
+        {       
+            List tokens = Arrays.asList(nextLine.split(","));
+            map = DelimitedFileConnector.defaultBuildMap(cols, tokens);
+            System.out.println("object:"+XMLObjectFactory.getInstance().toXml(map));                        
+        }
+ 
+        return map;
+    
+  </Source>
+</Rule>

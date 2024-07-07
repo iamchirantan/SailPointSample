@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+	<Workflow name="Example2 - Test Workflow" type="IdentityLifecycle" libraries="Identity" explicitTransitions="true">
+		
+		<RuleLibraries>
+			<Reference name="Approval Library" class="sailpoint.object.Rule"/>
+			<Reference name="LCM Workflow Library" class="sailpoint.object.Rule"/>
+		</RuleLibraries>
+		
+		<Variable initializer="true" name="trace">
+			<Description>
+				      Used for debugging this workflow and when set to true trace
+				      will be sent to stdout.
+			</Description>
+		</Variable>
+		
+		<!-- default variables -->
+		<Variable input="true" name="trigger">
+			<Description>The IdentityTrigger</Description>
+		</Variable>
+		<Variable input="true" name="event">
+			<Description>The IdentityChangeEvent</Description>
+		</Variable>
+		<Variable input="true" name="identityName">
+			<Description>The name of the identity.</Description>
+		</Variable>
+		
+		
+		<!-- Custom Variables --> 
+		<Variable name="plan"/>
+		<Variable name="project"/>
+		<Variable name="region"/>
+		
+		<!-- custom internal variables -->
+		<Variable name="identityObject">
+			<Description>The Identity object being worked on</Description>
+			<Script><Source>
+				<![CDATA[
+					import sailpoint.api.SailPointContext;
+					import sailpoint.api.SailPointFactory;
+					
+					SailPointContext ctx = SailPointFactory.getCurrentContext();
+					Identity identityObject = ctx.getObjectByName(Identity.class, identityName);
+				
+					return identityObject;
+				]]>
+			</Source></Script>
+		</Variable>
+		<Variable name="regionApprover"/>
+
+		
+		<Description>Process a new joiner (kicked off by Creation of new user.)</Description>
+		
+		<Step icon="Start" name="Start" >
+			<Transition to="Check Joiner Region"/>
+		</Step>
+		
+		<Step icon="Default" name="Check Joiner Region" resultVariable="region">
+			<Description>Check if this is from Asia-Pacific, Europe or Americas</Description>
+			<Script>
+				<Source><![CDATA[	
+
+				String identityRegion = identityObject.getStringAttribute("region");
+				System.out.println("identityRegion = " + identityRegion);
+				
+				if (identityRegion == null) {
+					return "NO REGION";
+				} else {
+					return identityRegion;
+				}
+
+				]]></Source>
+			</Script>
+			<Transition to="Asia-Pacific" when="region.equals(&quot;Asia-Pacific&quot;);"/>
+			<Transition to="Americas" when="region.equals(&quot;Americas&quot;);"/>	
+			<Transition to="Europe" when="region.equals(&quot;Europe&quot;);"/>		
+			<Transition to="No-Region"/>
+		</Step>
+		<Step icon="Default" name="Asia-Pacific">
+			<Description>All identities that are part of Asia-Pacific come here.</Description>
+			<Transition to="PerformActions"/>
+		</Step>
+		<Step icon="Default" name="Americas">
+			<Description>All identities that are part of Americas come here.</Description>
+			<Transition to="PerformActions"/>
+		</Step>
+		<Step icon="Default" name="Europe">
+			<Description>All identities that are part of Europe come here.</Description>
+			<Transition to="PerformActions"/>
+		</Step>
+		<Step icon="Default" name="No-Region">
+			<Description>All identities that have no Region come here so we can fill one in.</Description>
+			<Transition to="Need Region"/>
+		</Step>
+		
+		<Step icon="Default" name="PerformActions">
+			<Transition to="Stop"/>
+		</Step>
+		
+		
+		<Step name="Need Region">
+			<Approval name="Need Region" send="identityName" return="item,region,regionApprover" owner="ref:launcher">
+				<Arg name='workItemDescription' 
+			        value='Fill in Region for $(identityName)'/>
+				<AfterScript>
+					<Source>
+						<![CDATA[
+							if(regionString != null) {
+								System.out.println("region = " + region);
+								System.out.println("regionApprover = " + regionApprover);
+								// Really need to add to identity. 
+							}
+						]]>
+					</Source>
+				</AfterScript>
+				<Form id="GetRegion">
+					<Attributes>
+						<Map>
+							<entry key="pageTitle" value="Get Region"/>
+							<entry key="title" value="Need Region for Identity"/>
+						</Map>
+					</Attributes>
+					<Section type='datatable'>
+                        <Field name='identityName' displayName='Employee Name' readOnly='true'/>
+                    </Section>
+					<Section name="Edit These Fields">
+						<Field name="region" displayName="Region Value" required='true' type="String"/>
+					</Section>
+					
+					<Button label='Reject' action='back'/>
+        			<Button label='Approve' action='next'/>
+			        <Button label='Do Nothing' action='cancel'/>
+
+				</Form>
+			</Approval>
+			<Transition to="Approved" when="approved"/>
+			<Transition to="Not Approved"/>
+		</Step>
+
+		<Step name="Approved" action='call:sendEmail' icon='Email'>
+			<Arg name="to" value='script:getEmail(identityName)'/>
+			<Arg name="from" value='script:getEmail(launcher)'/>
+			<Arg name="template" value='Training-Example-Email-Approved'/>
+			<Description>Approved</Description>
+			<Transition to="Stop"/>
+		</Step>
+
+		<Step name="Not Approved" action='call:sendEmail' icon='Email'>
+			<Arg name="to" value='script:getEmail(identityName)'/>
+			<Arg name="from" value='script:getEmail(launcher)'/>
+			<Arg name="template" value='Training-Example-Email-Rejected'/>
+			<Description>Approved</Description>
+			<Transition to="Stop"/>
+		</Step>
+		<Step icon="Stop" name="Stop"/>
+	</Workflow>
+</sailpoint>

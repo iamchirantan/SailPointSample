@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="Example - List All Rules">
+  <Description>
+     Lists all rules with their name and type.
+     Inserts the String "MISSING" if any of the values are null.
+  </Description>
+  <Source>
+    import java.util.ArrayList;
+    import java.util.Iterator;
+    import sailpoint.object.Rule;
+
+    String delimiter = "|";
+    ArrayList ruleList = new ArrayList();
+    ArrayList ruleObjects = (ArrayList) context.getObjects(Rule.class);
+    if (null != ruleObjects) {
+        Iterator ruleIterator = ruleObjects.iterator();
+        while (ruleIterator.hasNext()) {
+            Rule rule = (Rule) ruleIterator.next();
+            String ruleName = null;
+            String ruleType = null;
+
+            try {
+                ruleName = rule.getName();
+            } catch (NullPointerException npe) {
+                ruleName = "MISSING"; }
+
+            try {
+                ruleType = rule.getType().name();
+            } catch (NullPointerException npe) {
+                ruleType = "MISSING"; }
+
+            ruleList.add(ruleName + delimiter + ruleType);
+        }
+    }
+    return ruleList;
+  </Source>
+</Rule>

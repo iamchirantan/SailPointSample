@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule   language="beanshell"  name="Rule - Extras - Run Task Rule 2">
+  <Description>Example Rule - This rule runs a task immediately</Description>
+  <Source>
+
+  import sailpoint.object.*;
+  import java.util.Date;
+  import sailpoint.api.TaskManager;
+  import sailpoint.tools.GeneralException;
+  import java.lang.Exception;
+
+  TaskDefinition task = context.getObjectByName(TaskDefinition.class,"Perform Maintenance");
+  if (null != task) {
+	System.out.println("We found the task... Name = " + task.getName());
+	try {
+		Date now = new Date();
+		TaskManager tm = new TaskManager(context);
+		System.out.println("We have a task manager");
+                tm.run(task,null);
+	} catch (Exception e) {
+		log.error("Exception processing request for "+task.getName());
+		throw new GeneralException(e);
+	}
+	
+	
+}
+
+  </Source>
+</Rule>

@@ -1,0 +1,87 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="Example - Walk SOD Policies">
+  <Source>
+
+import java.util.List;
+import java.util.Iterator;
+import sailpoint.api.*;
+import sailpoint.object.*;
+
+
+//
+//
+// Find Policies of type "SOD" by using query options to search for SOD Policies. 
+//
+	
+QueryOptions qo = new QueryOptions();
+qo.addFilter(Filter.eq("type",Policy.TYPE_SOD));
+Iterator policyResult = context.search(Policy.class, qo);
+		
+//
+// Iterate through all the SOD Policies one at a time. 
+//
+
+		
+while (policyResult.hasNext()) {
+	Policy policy = (Policy)policyResult.next();
+				
+	//
+	// If the policy is active, then process it to look for missing left/right roles in SOD Constraints. 
+	//
+				
+	if (policy.getState().equals(Policy.State.Active))  {
+				 
+		// 
+		// Print out the SOD Policy Name
+		// 
+		System.out.println("SOD Policy:" + policy.getName());
+						
+		//
+		// If the SOD Policy contains SOD Constraints, get them and list them 
+		//
+	
+		List constraints = policy.getSODConstraints();
+		if (null != constraints) {
+						       System.out.println("    # of SOD Constraints = " + constraints.size());
+							   Iterator SODiterator = constraints.iterator();
+							   while (SODiterator.hasNext()) { 
+							         SODConstraint constraint = (SODConstraint)SODiterator.next();
+									 
+									 System.out.println("     SOD Constraint: " + constraint.getName());
+									 
+									 List leftBundles = constraint.getLeftBundles();
+									 List rightBundles = constraint.getRightBundles();
+									 
+
+
+									 
+									 
+									 if ((leftBundles.size() == 0) || (rightBundles.size() == 0)) {
+									      System.out.println("     ****** ERROR ****** SOD Constraint [" + constraint.getName() + "] is missing a left or right role.");
+									} else { 
+                                                                              Iterator left = leftBundles.iterator(); 
+                                                                              Iterator right = rightBundles.iterator(); 
+									      System.out.println("          Left Role Count ==> " + leftBundles.size());
+                                                                              while (left.hasNext()) { 
+                                                                                       Bundle current = (Bundle)left.next();
+                                                                                       System.out.println("               Role:" + current.getName());
+                                                                               } 
+									      System.out.println("          Right Role Count ==> " + rightBundles.size());
+                                                                              while (right.hasNext()) { 
+                                                                                       Bundle current = (Bundle)right.next();
+                                                                                       System.out.println("               Role:" + current.getName());
+                                                                               } 
+                                                                        }
+ 
+							    }
+						} else {
+								System.out.println("     This SOD Policy contains no SOD constraints...nothing to do...");
+						}
+                }
+		}
+
+
+  </Source>
+</Rule>
+

@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+
+<sailpoint>
+<Workflow name='QuickLinkWorkflow-Terminate'
+  handler='sailpoint.api.StandardWorkflowHandler'>
+
+  <Variable name='trace' initializer='true'/>
+
+  <Variable name='requester'/>
+  <Variable name='requestee'/>
+
+  <Step name='WhoToTerminate'>
+    <Approval name='Termination'
+      owner='ref:requester' send='requester' return='requestee'>
+      <Form id='terminationselection'>
+        <Attributes>
+          <Map>
+            <entry key='pageTitle' value='Termination Workflow Example'/>
+            <entry key='title' value='Choose User to Terminate:'/>
+          </Map>
+        </Attributes>
+        <Section type='datatable'>                       
+          <Field name='requester' displayName='Requester' type='string'/>
+	</Section>
+	<Section> 
+          <Field name='requestee' displayName='User to Terminate' type='sailpoint.object.Identity'/>
+        </Section>
+        <Button label='Submit' action='next'/>
+        <Button label='Cancel' action='cancel'/>
+      </Form>
+<AfterScript>
+<Source>
+System.out.println("Requestee = " + requestee); 
+</Source>
+</AfterScript>
+    </Approval>
+    <Transition to='Terminate' when='approved'/>
+    <Transition to='End'/>
+  </Step>
+
+  <Step name='Terminate'>
+
+<Script><Source>
+				<![CDATA[
+					System.out.println("Employee to Terminate:" + requestee); 
+				]]>
+			</Source></Script>
+
+    <Transition to='End'/>
+  </Step>
+
+ 
+
+  <Step name='End'>
+<Script><Source>
+				<![CDATA[
+					System.out.println("Ended Successfuly...."); 
+				]]>
+			</Source></Script>
+</Step>
+
+</Workflow>
+</sailpoint>

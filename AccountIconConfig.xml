@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+
+<sailpoint>
+<ImportAction name="merge">
+	<UIConfig name="UIConfig">
+		<Attributes>
+			<Map>
+			<entry key="accountIconConfig">			<value>			        <List>			        <AccountIconConfig attribute="privileged" source="/images/icons/icon_Star.png" title="This is a privileged account" value="true"/>			        <AccountIconConfig attribute="service" source="/images/icons/modeler_profile_16.png" title="This is a service account" value="true"/>			        <AccountIconConfig attribute="inactive" source="/images/icons/certif_approved_16.png" title="Account Enabled" value="false"/>			        <AccountIconConfig attribute="inactive" source="/images/icons/certif_rejected_16.png" title="Account Disabled" value="true"/>			        </List>			</value>			</entry>
+			</Map>
+		</Attributes>
+	</UIConfig>
+</ImportAction>
+</sailpoint>
+
+

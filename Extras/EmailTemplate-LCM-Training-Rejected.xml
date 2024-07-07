@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE EmailTemplate PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<EmailTemplate name="Training-Example-Email-Rejected">
+  <Body>
+      
+
+$identityName, 	  
+	  
+$launcher tried to update your region and it was rejected. 
+
+So Sorry, 
+
+- IdentityIQ System Administrator
+
+
+    </Body>
+  <Description>
+      Sample Email Template
+    </Description>
+  <Signature>
+    <Inputs>
+      <Argument name="launcher" type="string">
+        <Description>The name of the Identity that launched the workflow.</Description>
+      </Argument>
+      <Argument name="identityName" type="string">
+        <Description>The display name of the Identity that is being changed.</Description>
+      </Argument>
+      <Argument name="region" type="string">
+        <Description>New Region Attribute</Description>
+      </Argument>	  
+    </Inputs>
+  </Signature>
+  <Subject>Changes to your Identity were rejected</Subject>
+</EmailTemplate>
